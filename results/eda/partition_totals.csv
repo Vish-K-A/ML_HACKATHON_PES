@@ -1,0 +1,3 @@
+partition,trips,gps_points,route_arcs,nan_rows
+student_test,10,19160,3477,0
+train,80,208417,31336,0

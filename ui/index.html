@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PathSnap Evaluator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--bg:#f4f6f9;--panel:#fff;--ink:#17202b;--muted:#5f6b7a;--line:#dde3ea;--accent:#0f766e;--bad:#c2410c;--route:#d62728;--clf:#ff9f1c;--gps:#1f77b4}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:12px 20px;background:#0b1f33;color:#fff}
+header h1{font-size:18px;margin:0;letter-spacing:.3px}header .sub{color:#9fb3c8;font-size:12px}
+header .api{margin-left:auto;display:flex;gap:6px;align-items:center}
+header input{width:260px;padding:6px 8px;border-radius:6px;border:1px solid #33506b;background:#12304d;color:#fff}
+button{cursor:pointer;border:0;border-radius:6px;padding:7px 12px;background:var(--accent);color:#fff;font-weight:600}
+button.ghost{background:transparent;border:1px solid #4a6a88}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#888}.dot.ok{background:#22c55e}.dot.err{background:#ef4444}
+main{display:grid;grid-template-columns:300px 1fr 320px;gap:12px;padding:12px;height:calc(100vh - 58px)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:auto}
+.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0;padding:12px 14px;border-bottom:1px solid var(--line)}
+.trip{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.trip:hover{background:#eef6f5}.trip.active{background:#d9f0ed;border-left:4px solid var(--accent)}
+.trip b{font-family:ui-monospace,Consolas,monospace}.trip small{color:var(--muted)}
+.trip .acc{font-weight:700;color:var(--accent)}
+#map{height:100%;border-radius:10px;border:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.kpi .v{font-size:22px;font-weight:700}.kpi .l{font-size:11px;color:var(--muted)}
+.kpi.main{grid-column:span 2;background:#ecfdf5;border-color:#a7f3d0}.kpi.main .v{font-size:30px;color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}td{padding:5px 14px;border-bottom:1px solid var(--line)}td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.legend{padding:10px 14px;font-size:12px;color:var(--muted)}.legend span{display:inline-block;width:18px;height:4px;margin-right:6px;vertical-align:middle}
+.status{padding:10px 14px;color:var(--muted);font-size:12.5px}.status.err{color:var(--bad)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #9ca3af;border-top-color:var(--accent);border-radius:50%;animation:s 1s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes s{to{transform:rotate(360deg)}}
+@media (max-width:1000px){main{grid-template-columns:1fr;height:auto}#map{height:60vh}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>PathSnap Evaluator</h1><div class="sub">Distributed map-matching &amp; route reconstruction</div></div>
+  <div class="api"><span id="apidot" class="dot"></span>
+    <input id="apiurl" placeholder="http://LAPTOP1-IP:8000" aria-label="API URL">
+    <button class="ghost" id="connect">Connect</button></div>
+</header>
+<main>
+  <section class="panel">
+    <h2 id="tripsTitle">Evaluation trips</h2>
+    <div id="trips"><div class="status">Connect to the API to load trips.</div></div>
+  </section>
+  <section><div id="map"></div></section>
+  <section class="panel">
+    <h2>Results</h2>
+    <div id="result"><div class="status">Select a trip. The UI sends only the trip ID; the API runs the full pipeline and scores it against reference data held on the server.</div></div>
+    <div class="legend">
+      <div><span style="background:var(--route);height:5px"></span>Predicted route (classifier + HMM)</div>
+      <div><span style="background:var(--clf)"></span>Classifier-only route (toggle in map)</div>
+      <div><span style="background:#22c55e;height:8px;width:8px;border-radius:50%"></span>GPS point matched correctly
+        &nbsp;<span style="background:#ef4444;height:8px;width:8px;border-radius:50%"></span>mismatched</div>
+    </div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const store = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
+const defaultApi = location.protocol.startsWith('http') && location.port === '8000' ? location.origin : (store.get('pathsnap_api') || 'http://localhost:8000');
+$('#apiurl').value = defaultApi;
+const api = () => $('#apiurl').value.replace(/\/$/, '');
+
+const map = L.map('map', {preferCanvas: true}).setView([20, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; OpenStreetMap'}).addTo(map);
+let layers = {}, control = null;
+const results = {};
+
+async function connect() {
+  store.set('pathsnap_api', api());
+  $('#trips').innerHTML = '<div class="status"><span class="spinner"></span>Loading trips…</div>';
+  try {
+    const h = await (await fetch(api() + '/health')).json();
+    const r = await (await fetch(api() + '/trips')).json();
+    $('#apidot').className = 'dot ok';
+    $('#tripsTitle').textContent = `Evaluation trips (${r.trips.length}) · ${r.partition}`;
+    $('#trips').innerHTML = '';
+    r.trips.forEach(t => {
+      const d = document.createElement('div'); d.className = 'trip'; d.id = 't' + t.trip_id;
+      d.innerHTML = `<div><b>${t.trip_id}</b><br><small>${t.n_points} GPS points · ${t.duration_min} min</small></div><div class="acc" id="a${t.trip_id}"></div>`;
+      d.onclick = () => run(t.trip_id); $('#trips').appendChild(d);
+    });
+    $('#result').innerHTML = `<div class="status">Connected. Model: <b>${h.model}</b>. HMM beta=${h.hmm_params.beta}, w=${h.hmm_params.emission_power}.</div>`;
+  } catch (e) {
+    $('#apidot').className = 'dot err';
+    $('#trips').innerHTML = `<div class="status err">Could not reach ${api()}. Check that the API is running and the address is right.</div>`;
+  }
+}
+
+async function run(tid) {
+  document.querySelectorAll('.trip').forEach(e => e.classList.toggle('active', e.id === 't' + tid));
+  $('#result').innerHTML = `<div class="status"><span class="spinner"></span>Running pipeline for trip ${tid}…</div>`;
+  try {
+    const resp = await fetch(api() + '/predict', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({trip_id: tid})});
+    if (!resp.ok) throw new Error(resp.status + ' ' + (await resp.text()));
+    const r = await resp.json(); results[tid] = r; draw(r); show(r);
+    $('#a' + tid).textContent = (r.metrics.hmm_accuracy * 100).toFixed(1) + '%';
+  } catch (e) { $('#result').innerHTML = `<div class="status err">Request failed: ${e.message}</div>`; }
+}
+
+function draw(r) {
+  Object.values(layers).forEach(l => map.removeLayer(l)); if (control) map.removeControl(control);
+  const gps = L.layerGroup(r.gps.map(p => L.circleMarker([p[0], p[1]], {radius: 2.5, weight: 0, fillOpacity: .85, fillColor: p[2] ? '#22c55e' : '#ef4444'})));
+  const pred = L.layerGroup(r.predicted_route.map(l => L.polyline(l, {color: '#d62728', weight: 5, opacity: .8})));
+  const clf = L.layerGroup(r.classifier_route.map(l => L.polyline(l, {color: '#ff9f1c', weight: 3, opacity: .9, dashArray: '6 5'})));
+  layers = {'Predicted route (HMM)': pred, 'GPS observations': gps, 'Classifier-only route': clf};
+  pred.addTo(map); gps.addTo(map);
+  control = L.control.layers(null, layers, {collapsed: false}).addTo(map);
+  map.fitBounds(L.latLngBounds(r.gps.map(p => [p[0], p[1]])), {padding: [20, 20]});
+}
+
+const pct = v => (v * 100).toFixed(2) + '%';
+function show(r) {
+  const m = r.metrics, t = r.timings_s;
+  $('#result').innerHTML = `
+  <div class="kpis">
+    <div class="kpi main"><div class="v">${pct(m.hmm_accuracy)}</div><div class="l">Point accuracy, classifier + HMM (trip ${r.trip_id})</div></div>
+    <div class="kpi"><div class="v">${pct(m.classifier_top1_accuracy)}</div><div class="l">Classifier-only Top-1</div></div>
+    <div class="kpi"><div class="v">${m.hmm_route_f1.toFixed(3)}</div><div class="l">Route F1 (length-weighted)</div></div>
+    <div class="kpi"><div class="v">${pct(m.hmm_continuity)}</div><div class="l">Route continuity (HMM)</div></div>
+    <div class="kpi"><div class="v">${t.total_predict.toFixed(2)} s</div><div class="l">Pipeline time</div></div>
+  </div>
+  <table>
+    <tr><td>GPS observations</td><td>${m.n_points}</td></tr>
+    <tr><td>Candidate miss rate</td><td>${pct(m.candidate_miss_rate)}</td></tr>
+    <tr><td>Classifier-only continuity</td><td>${pct(m.classifier_continuity)}</td></tr>
+    <tr><td>Classifier-only route F1</td><td>${m.classifier_route_f1.toFixed(3)}</td></tr>
+    <tr><td>Route precision / recall</td><td>${m.hmm_route_precision.toFixed(3)} / ${m.hmm_route_recall.toFixed(3)}</td></tr>
+    <tr><td>Predicted / reference arcs</td><td>${m.n_predicted_route_arcs} / ${m.n_reference_arcs}</td></tr>
+    <tr><td>HMM chain breaks (gaps)</td><td>${r.hmm_breaks}</td></tr>
+    <tr><td>Candidates + network</td><td>${t.candidates_s.toFixed(2)} s</td></tr>
+    <tr><td>Features</td><td>${t.features_s.toFixed(2)} s</td></tr>
+    <tr><td>Classifier</td><td>${t.classifier_s.toFixed(2)} s</td></tr>
+    <tr><td>Viterbi</td><td>${t.viterbi_s.toFixed(2)} s</td></tr>
+  </table>`;
+}
+$('#connect').onclick = connect;
+$('#apiurl').addEventListener('keydown', e => { if (e.key === 'Enter') connect(); });
+const qs = new URLSearchParams(location.search);
+if (qs.get('api')) $('#apiurl').value = qs.get('api');
+connect().then(() => { if (qs.get('trip')) run(qs.get('trip')); });
+</script>
+</body>
+</html>

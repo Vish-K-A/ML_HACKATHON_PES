@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+# raw data is distributed by the organisers; evaluator data must never be committed
+data/
+# large intermediate tables (regenerate with scripts/02_build_dataset.py)
+results/features_*.parquet
+results/hmm/oof_scores_*.npy
+results/models/test_scores_*.npy
+results/optuna/test_scores_*.npy
+models/*_untuned.joblib
+*.bak

@@ -1,0 +1,56 @@
+{
+  "model_name": "LightGBM-untuned",
+  "model_params": {
+    "n_estimators": 400,
+    "learning_rate": 0.05,
+    "num_leaves": 63,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8
+  },
+  "features": [
+    "dist",
+    "log_dist",
+    "rank",
+    "dist_minus_min",
+    "dist_ratio_min",
+    "gauss_share",
+    "n_cand",
+    "t",
+    "at_end",
+    "arc_len",
+    "log_arc_len",
+    "head_diff",
+    "cos_head",
+    "head_diff_rev",
+    "speed",
+    "heading_reliable",
+    "two_way",
+    "dist_prev",
+    "dist_next",
+    "win_mean_dist",
+    "win_max_dist",
+    "win_rank_mean",
+    "out_deg_to",
+    "in_deg_from",
+    "dt_prev",
+    "dt_next"
+  ],
+  "hmm_params": {
+    "beta": 5.0,
+    "emission_power": 1.0,
+    "max_speed_mps": 55.0,
+    "min_search_m": 300.0,
+    "gap_break_s": 120.0
+  },
+  "candidate_config": {
+    "radius_m": 60.0,
+    "k": 12,
+    "densify_step_m": 15.0,
+    "margin_m": 1000.0
+  },
+  "trained_on": "train partition (80 trips), observations with reference arc in candidate set",
+  "note": "interim demo artifact; replaced by 05_hmm_experiments.py with the tuned model",
+  "seed": 42,
+  "created": "2026-11-18 11:37:27"
+}
