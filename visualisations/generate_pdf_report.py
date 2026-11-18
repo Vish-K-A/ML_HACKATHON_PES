@@ -84,7 +84,31 @@ def img_to_data_uri(path: str) -> str:
 
 
 def build_report() -> None:
-    create_cmd_screenshot()
+    if not os.path.exists(os.path.join(FIG_DIR, "api_cmd_screenshot.png")):
+        create_cmd_screenshot()
+
+    edge_candidates = [
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+    ]
+    edge_exe = next((p for p in edge_candidates if os.path.exists(p)), None)
+
+    # Render live browser screenshot of interactive Folium HTML map (trip_00000007_folium_map.html)
+    folium_html_file = os.path.join(ROOT_DIR, "supporting_results", "maps", "trip_00000007_folium_map.html")
+    folium_shot_path = os.path.join(FIG_DIR, "folium_html_live_render.png")
+    if edge_exe and os.path.exists(folium_html_file):
+        subprocess.run(
+            [
+                edge_exe,
+                "--headless",
+                "--disable-gpu",
+                "--window-size=1280,800",
+                "--virtual-time-budget=3000",
+                f"--screenshot={folium_shot_path}",
+                folium_html_file,
+            ],
+            check=False,
+        )
 
     # Copy all figures to artifact dir as well
     os.makedirs(ARTIFACT_DIR, exist_ok=True)
@@ -255,6 +279,29 @@ def build_report() -> None:
         ]
         subprocess.run(cmd, check=True)
         print(f"Generated PDF report: {pdf_path} ({os.path.getsize(pdf_path) / (1024*1024):.2f} MB)")
+
+    # Also build Part 2 focused report (Bayesian -> HMM/Viterbi -> Folium -> API/UI) if present
+    part2_md_path = os.path.join(ROOT_DIR, "PathSnap_Part2_Bayesian_HMM_Folium_UI_Report.md")
+    if os.path.exists(part2_md_path):
+        with open(part2_md_path, "r", encoding="utf-8") as f:
+            p2_md = f.read()
+        p2_body = markdown.markdown(p2_md, extensions=["tables", "fenced_code"])
+        for fname in os.listdir(FIG_DIR):
+            if fname.endswith(".png"):
+                rel_str = f"supporting_results/figures/{fname}"
+                if rel_str in p2_body:
+                    p2_body = p2_body.replace(rel_str, img_to_data_uri(os.path.join(FIG_DIR, fname)))
+        p2_html = full_html.split("<body>")[0] + "<body>\n" + p2_body + "\n</body>\n</html>"
+        p2_html_path = os.path.join(ROOT_DIR, "PathSnap_Part2_Bayesian_HMM_Folium_UI_Report.html")
+        p2_pdf_path = os.path.join(ROOT_DIR, "PathSnap_Part2_Bayesian_HMM_Folium_UI_Report.pdf")
+        with open(p2_html_path, "w", encoding="utf-8") as f:
+            f.write(p2_html)
+        if edge_exe:
+            subprocess.run(
+                [edge_exe, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={p2_pdf_path}", p2_html_path],
+                check=True,
+            )
+            print(f"Generated Part 2 PDF report: {p2_pdf_path} ({os.path.getsize(p2_pdf_path) / (1024*1024):.2f} MB)")
     else:
         print("Edge executable not found; saved HTML report.")
 

@@ -31,3 +31,7 @@ Thumbs.db
 # Raw/local datasets (keep folder placeholders)
 data/raw/**
 !data/raw/.gitkeep
+
+# Local PDF and HTML report exports
+*.pdf
+PathSnap_*.html
