@@ -35,3 +35,5 @@ data/raw/**
 # Local PDF and HTML report exports
 *.pdf
 PathSnap_*.html
+
+PathSnap_*.md
