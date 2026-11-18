@@ -1,0 +1,63 @@
+{
+  "sampler": "Optuna TPESampler (Tree-structured Parzen Estimator, multivariate=True, seed=42)",
+  "objective_metric": "5-Fold GroupKFold Cross-Validation Macro F1-score on 80 Training Trips",
+  "n_trials": 15,
+  "total_optimisation_time_s": 471.61,
+  "best_trial_number": 12,
+  "best_cv_macro_f1": 0.9472,
+  "baseline_cv_macro_f1": 0.9458,
+  "best_hyperparameters": {
+    "n_estimators": 511,
+    "learning_rate": 0.05814104760978912,
+    "num_leaves": 109,
+    "max_depth": 12,
+    "min_child_samples": 111,
+    "subsample": 0.9928855651090441,
+    "colsample_bytree": 0.7867527676093679,
+    "reg_alpha": 0.0015493634272824956,
+    "reg_lambda": 0.0020788008183974154,
+    "scale_pos_weight": 1.5853972667543181
+  },
+  "untuned_vs_tuned": {
+    "untuned": {
+      "cv_macro_f1": 0.9458,
+      "student_test_top1_accuracy": 0.9195,
+      "student_test_route_match_accuracy": 0.9498,
+      "student_test_macro_f1": 0.9584,
+      "student_test_log_loss": 0.05453,
+      "student_test_route_continuity": 0.9494,
+      "training_time_s": 22.924,
+      "inference_time_s": 0.4128
+    },
+    "tuned": {
+      "cv_macro_f1": 0.9472,
+      "student_test_top1_accuracy": 0.927,
+      "student_test_route_match_accuracy": 0.9553,
+      "student_test_macro_f1": 0.961,
+      "student_test_log_loss": 0.0466,
+      "student_test_route_continuity": 0.9589,
+      "training_time_s": 49.295,
+      "inference_time_s": 1.6855
+    }
+  },
+  "hmm_viterbi_comparison": {
+    "classifier_only": {
+      "observation_top1_accuracy": 0.927,
+      "route_match_accuracy": 0.9553,
+      "mean_route_continuity": 0.9589,
+      "mean_sequence_f1": 0.901,
+      "mean_sequence_jaccard": 0.8221,
+      "inference_time_s": 1.6855
+    },
+    "classifier_plus_hmm_viterbi": {
+      "observation_top1_accuracy": 0.9432,
+      "route_match_accuracy": 0.9648,
+      "mean_route_continuity": 0.9881,
+      "reconstructed_strict_continuity": 0.9807,
+      "mean_sequence_f1": 0.9361,
+      "mean_sequence_jaccard": 0.8812,
+      "total_inference_and_decode_time_s": 7.7754
+    }
+  },
+  "final_model_artifact_path": "C:\\Users\\Vishruta\\Desktop\\Sem 5\\ML_Hackathon\\ML_HACKATHON_PES\\models\\final_model.joblib"
+}

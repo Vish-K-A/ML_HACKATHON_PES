@@ -1,0 +1,389 @@
+{
+  "Logistic Regression": {
+    "summary": {
+      "Model": "Logistic Regression",
+      "Algorithm Family": "Linear & Probabilistic",
+      "Key Configuration": "L2 penalty, C=1.0, solver='lbfgs', max_iter=300",
+      "Loss / Objective": "Binary Cross-Entropy (Log-Loss) with L2 Regularisation",
+      "Train Macro F1": 0.9278,
+      "CV Macro F1-score": 0.9232,
+      "CV Macro F1 Std": 0.0332,
+      "CV Top-1 Accuracy": 0.7982,
+      "Top-1 Accuracy": 0.8997,
+      "Route Match Accuracy": 0.9442,
+      "Route continuity": 0.9455,
+      "Student-Test Macro F1-score": 0.9375,
+      "Student-Test Precision": 0.9378,
+      "Student-Test Recall": 0.9373,
+      "Student-Test Accuracy": 0.973,
+      "Log Loss": 0.07862,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.8801,
+      "Training Time (s)": 7.149,
+      "Inference Time (s)": 0.1195
+    },
+    "cv_fold_macro_f1s": [
+      0.8597,
+      0.9249,
+      0.9532,
+      0.9344,
+      0.944
+    ],
+    "cv_fold_top1_accs": [
+      0.4965,
+      0.872,
+      0.925,
+      0.8103,
+      0.8871
+    ],
+    "cv_fold_log_losses": [
+      0.28291,
+      0.09494,
+      0.06323,
+      0.07985,
+      0.07751
+    ],
+    "train_log_loss": 0.092,
+    "confusion_matrix": [
+      [
+        132346,
+        2054
+      ],
+      [
+        2080,
+        16800
+      ]
+    ],
+    "mlp_history": null
+  },
+  "Distance-Weighted KNN": {
+    "summary": {
+      "Model": "Distance-Weighted KNN",
+      "Algorithm Family": "Instance-Based",
+      "Key Configuration": "n_neighbors=25, weights='distance', metric='euclidean'",
+      "Loss / Objective": "Non-parametric Inverse-Distance Weighted Local Voting",
+      "Train Macro F1": 1.0,
+      "CV Macro F1-score": 0.9257,
+      "CV Macro F1 Std": 0.0348,
+      "CV Top-1 Accuracy": 0.8021,
+      "Top-1 Accuracy": 0.9061,
+      "Route Match Accuracy": 0.9458,
+      "Route continuity": 0.9485,
+      "Student-Test Macro F1-score": 0.9388,
+      "Student-Test Precision": 0.9407,
+      "Student-Test Recall": 0.9369,
+      "Student-Test Accuracy": 0.9737,
+      "Log Loss": 0.09986,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.8846,
+      "Training Time (s)": 0.125,
+      "Inference Time (s)": 26.7089
+    },
+    "cv_fold_macro_f1s": [
+      0.8585,
+      0.9293,
+      0.956,
+      0.9378,
+      0.947
+    ],
+    "cv_fold_top1_accs": [
+      0.4952,
+      0.8768,
+      0.931,
+      0.8138,
+      0.8935
+    ],
+    "cv_fold_log_losses": [
+      0.32202,
+      0.1281,
+      0.0713,
+      0.10231,
+      0.1143
+    ],
+    "train_log_loss": 0.0,
+    "confusion_matrix": [
+      [
+        132476,
+        1924
+      ],
+      [
+        2113,
+        16767
+      ]
+    ],
+    "mlp_history": null
+  },
+  "Decision Tree": {
+    "summary": {
+      "Model": "Decision Tree",
+      "Algorithm Family": "Tree-Based",
+      "Key Configuration": "criterion='gini', max_depth=10, min_samples_leaf=25",
+      "Loss / Objective": "Gini Impurity Reduction",
+      "Train Macro F1": 0.9608,
+      "CV Macro F1-score": 0.9312,
+      "CV Macro F1 Std": 0.045,
+      "CV Top-1 Accuracy": 0.8109,
+      "Top-1 Accuracy": 0.9142,
+      "Route Match Accuracy": 0.9446,
+      "Route continuity": 0.9438,
+      "Student-Test Macro F1-score": 0.9509,
+      "Student-Test Precision": 0.9567,
+      "Student-Test Recall": 0.9453,
+      "Student-Test Accuracy": 0.979,
+      "Log Loss": 0.06596,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.8847,
+      "Training Time (s)": 12.73,
+      "Inference Time (s)": 0.0478
+    },
+    "cv_fold_macro_f1s": [
+      0.8436,
+      0.9376,
+      0.9684,
+      0.9474,
+      0.959
+    ],
+    "cv_fold_top1_accs": [
+      0.5019,
+      0.8807,
+      0.9383,
+      0.8278,
+      0.9059
+    ],
+    "cv_fold_log_losses": [
+      0.20927,
+      0.08916,
+      0.04686,
+      0.0691,
+      0.06831
+    ],
+    "train_log_loss": 0.04699,
+    "confusion_matrix": [
+      [
+        133067,
+        1333
+      ],
+      [
+        1880,
+        17000
+      ]
+    ],
+    "mlp_history": null
+  },
+  "Random Forest": {
+    "summary": {
+      "Model": "Random Forest",
+      "Algorithm Family": "Ensemble (Bagging)",
+      "Key Configuration": "n_estimators=80, max_depth=15, min_samples_leaf=10, max_features='sqrt'",
+      "Loss / Objective": "Bagged Gini Impurity Reduction across Decorrelated Trees",
+      "Train Macro F1": 0.9655,
+      "CV Macro F1-score": 0.939,
+      "CV Macro F1 Std": 0.0363,
+      "CV Top-1 Accuracy": 0.8126,
+      "Top-1 Accuracy": 0.9153,
+      "Route Match Accuracy": 0.9469,
+      "Route continuity": 0.9476,
+      "Student-Test Macro F1-score": 0.955,
+      "Student-Test Precision": 0.9639,
+      "Student-Test Recall": 0.9465,
+      "Student-Test Accuracy": 0.9809,
+      "Log Loss": 0.05351,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.885,
+      "Training Time (s)": 9.332,
+      "Inference Time (s)": 0.4701
+    },
+    "cv_fold_macro_f1s": [
+      0.869,
+      0.941,
+      0.9699,
+      0.9529,
+      0.9621
+    ],
+    "cv_fold_top1_accs": [
+      0.5013,
+      0.8834,
+      0.939,
+      0.8306,
+      0.9087
+    ],
+    "cv_fold_log_losses": [
+      0.18416,
+      0.07076,
+      0.03935,
+      0.05651,
+      0.04792
+    ],
+    "train_log_loss": 0.0374,
+    "confusion_matrix": [
+      [
+        133348,
+        1052
+      ],
+      [
+        1873,
+        17007
+      ]
+    ],
+    "mlp_history": null
+  },
+  "Deep MLP Classifier": {
+    "summary": {
+      "Model": "Deep MLP Classifier",
+      "Algorithm Family": "Neural Networks",
+      "Key Configuration": "hidden_layer_sizes=(128, 64), ReLU, Adam, lr=1e-3, alpha=1e-4, early_stopping=True",
+      "Loss / Objective": "Binary Cross-Entropy Loss via Adam Stochastic Gradient Optimization",
+      "Train Macro F1": 0.9459,
+      "CV Macro F1-score": 0.9325,
+      "CV Macro F1 Std": 0.0378,
+      "CV Top-1 Accuracy": 0.8093,
+      "Top-1 Accuracy": 0.9148,
+      "Route Match Accuracy": 0.9503,
+      "Route continuity": 0.9544,
+      "Student-Test Macro F1-score": 0.9486,
+      "Student-Test Precision": 0.957,
+      "Student-Test Recall": 0.9407,
+      "Student-Test Accuracy": 0.9782,
+      "Log Loss": 0.06112,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.8934,
+      "Training Time (s)": 47.072,
+      "Inference Time (s)": 0.3654
+    },
+    "cv_fold_macro_f1s": [
+      0.8593,
+      0.9379,
+      0.966,
+      0.9447,
+      0.9548
+    ],
+    "cv_fold_top1_accs": [
+      0.4968,
+      0.8821,
+      0.9388,
+      0.8225,
+      0.9061
+    ],
+    "cv_fold_log_losses": [
+      0.22572,
+      0.07652,
+      0.04384,
+      0.06811,
+      0.06295
+    ],
+    "train_log_loss": 0.05642,
+    "confusion_matrix": [
+      [
+        133117,
+        1283
+      ],
+      [
+        2058,
+        16822
+      ]
+    ],
+    "mlp_history": {
+      "loss_curve": [
+        0.12026,
+        0.07592,
+        0.07094,
+        0.06742,
+        0.06528,
+        0.0641,
+        0.06307,
+        0.06137,
+        0.06113,
+        0.06018,
+        0.05978,
+        0.05914,
+        0.0586,
+        0.05816,
+        0.05735,
+        0.0569,
+        0.05661,
+        0.05618,
+        0.05563,
+        0.05518
+      ],
+      "validation_scores": [
+        0.97124,
+        0.97238,
+        0.9731,
+        0.975,
+        0.97557,
+        0.9751,
+        0.97557,
+        0.97629,
+        0.97657,
+        0.97629,
+        0.9771,
+        0.97648,
+        0.97752,
+        0.97633,
+        0.97776,
+        0.97752,
+        0.97648,
+        0.97762,
+        0.97743,
+        0.97752
+      ]
+    }
+  },
+  "LightGBM Classifier": {
+    "summary": {
+      "Model": "LightGBM Classifier",
+      "Algorithm Family": "Gradient Boosting",
+      "Key Configuration": "n_estimators=250, lr=0.07, num_leaves=31, subsample=0.85, colsample_bytree=0.85",
+      "Loss / Objective": "Gradient-Boosted Binary Log-Loss with Leaf-wise Histogram Splitting",
+      "Train Macro F1": 0.9689,
+      "CV Macro F1-score": 0.9408,
+      "CV Macro F1 Std": 0.0353,
+      "CV Top-1 Accuracy": 0.813,
+      "Top-1 Accuracy": 0.923,
+      "Route Match Accuracy": 0.9533,
+      "Route continuity": 0.954,
+      "Student-Test Macro F1-score": 0.9594,
+      "Student-Test Precision": 0.9617,
+      "Student-Test Recall": 0.9571,
+      "Student-Test Accuracy": 0.9825,
+      "Log Loss": 0.05146,
+      "Candidate Miss Rate": 0.0146,
+      "Sequence F1": 0.8966,
+      "Training Time (s)": 18.801,
+      "Inference Time (s)": 0.387
+    },
+    "cv_fold_macro_f1s": [
+      0.8727,
+      0.9437,
+      0.9713,
+      0.9536,
+      0.9629
+    ],
+    "cv_fold_top1_accs": [
+      0.5039,
+      0.8799,
+      0.9403,
+      0.83,
+      0.911
+    ],
+    "cv_fold_log_losses": [
+      0.2633,
+      0.08853,
+      0.03896,
+      0.05873,
+      0.05118
+    ],
+    "train_log_loss": 0.03342,
+    "confusion_matrix": [
+      [
+        133172,
+        1228
+      ],
+      [
+        1448,
+        17432
+      ]
+    ],
+    "mlp_history": null
+  }
+}
