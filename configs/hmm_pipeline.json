@@ -1,0 +1,7 @@
+{
+  "bayes_trials": 8,
+  "bayes_cv_folds": 3,
+  "bayes_timeout_seconds": 5400,
+  "hmm_distance_scale_m": 60.0,
+  "hmm_disconnected_penalty": 4.0
+}

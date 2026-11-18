@@ -27,7 +27,27 @@ Thumbs.db
 # Temporary experiment output
 *.log
 *.tmp
+*.bak
 
 # Raw/local datasets (keep folder placeholders)
 data/raw/**
 !data/raw/.gitkeep
+/data/train/
+/data/test/
+/data/student_test/
+/data/evaluator_test/
+/Student folder/
+*.track
+*.nodes
+*.arcs
+*.route
+
+# Model binaries are local artifacts; the Extra Trees model exceeds GitHub's file limit
+/artifacts/*.joblib
+/artifacts/*.pkl
+/artifacts/*.pickle
+
+# Local data/result transfer archives
+/pathsnap_results*.zip
+/pathsnap_hmm*.zip
+/Student folder*.zip

@@ -1,0 +1,34 @@
+{
+  "candidate_rows_train": 1003854,
+  "candidate_rows_validation": 239953,
+  "validation_trip_ids": [
+    "00000001",
+    "00000005",
+    "00000013",
+    "00000016",
+    "00000024",
+    "00000028",
+    "00000035",
+    "00000037",
+    "00000038",
+    "00000041",
+    "00000043",
+    "00000055",
+    "00000061",
+    "00000084",
+    "00000085",
+    "00000088"
+  ],
+  "observation_top1_accuracy": 0.6509630005068424,
+  "observation_macro_f1": 0.48018048333966606,
+  "validation_candidate_recall": 0.867238671740838,
+  "median_alignment_error_m": 5.1739711626448965,
+  "p95_alignment_error_m": 1824.9229609549006,
+  "feature_names": [
+    "distance_m",
+    "heading_difference_deg",
+    "speed_mps",
+    "time_gap_s"
+  ],
+  "elapsed_seconds": 200.73
+}

@@ -1,0 +1,14 @@
+{
+  "data_root": "../data",
+  "train_split": "train",
+  "validation_fraction": 0.2,
+  "random_seed": 42,
+  "max_candidates": 8,
+  "candidate_radius_m": 100.0,
+  "midpoint_prefilter": 40,
+  "max_negatives_per_observation": 7,
+  "n_estimators": 120,
+  "min_samples_leaf": 2,
+  "logistic_max_iter": 150,
+  "n_jobs": 2
+}
