@@ -14,6 +14,7 @@ import joblib
 import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -177,6 +178,18 @@ def build_prediction_folium_html(
     folium.LayerControl(collapsed=True).add_to(fmap)
     fmap.fit_bounds([[float(track[:, 1].min()), float(track[:, 0].min())], [float(track[:, 1].max()), float(track[:, 0].max())]])
     return fmap._repr_html_()
+
+
+@app.get("/", response_class=HTMLResponse)
+def root_dashboard(request: Request) -> HTMLResponse:
+    """
+    Serves the interactive PathSnap UI dashboard directly at `/` so visiting
+    http://10.30.201.241:8000 in a browser works immediately (in addition to
+    running ui/app.py on port 8501 on Laptop 2).
+    """
+    from ui.app import INDEX_HTML
+    base_url = str(request.base_url).rstrip("/")
+    return HTMLResponse(content=INDEX_HTML.replace("__DEFAULT_API_URL__", base_url))
 
 
 @app.get("/health")
