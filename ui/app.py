@@ -176,6 +176,7 @@ INDEX_HTML = """<!DOCTYPE html>
     }
     iframe {
       width: 100%;
+      height: 680px;
       flex: 1;
       border: none;
       background: #fff;

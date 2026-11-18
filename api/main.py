@@ -174,7 +174,7 @@ def build_prediction_folium_html(
     ).add_to(fg_gps)
     fg_gps.add_to(fmap)
 
-    folium.LayerControl(collapsed=False).add_to(fmap)
+    folium.LayerControl(collapsed=True).add_to(fmap)
     fmap.fit_bounds([[float(track[:, 1].min()), float(track[:, 0].min())], [float(track[:, 1].max()), float(track[:, 0].max())]])
     return fmap._repr_html_()
 

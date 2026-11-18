@@ -292,3 +292,12 @@ The system is architected for the **Two-Laptop Deployment** specification:
 - **Laptop 2 (`ui/app.py` — Evaluator Web Interface)**:
   - Runs on `http://0.0.0.0:8501` (`deployment/start_laptop2_ui.bat`).
   - Connects to Laptop 1's API URL, displays all 10 evaluation trips, triggers live inference on Laptop 1 upon selection, and renders the returned evaluation metrics, reconstructed `arc_id` sequence, and interactive Folium map.
+
+
+### 7.1 Working UI Screenshot (Laptop 2 Evaluator Interface)
+
+![Working Evaluator UI Screenshot](supporting_results/figures/ui_live_screenshot.png)
+
+### 7.2 Successful API Responses on CMD of Receiving Laptop (Laptop 1)
+
+![Receiving Laptop CMD API Logs](supporting_results/figures/api_cmd_screenshot.png)
